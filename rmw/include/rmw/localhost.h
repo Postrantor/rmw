@@ -18,17 +18,21 @@
 #include "rmw/visibility_control.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-/// Used to specify if the context can only communicate through localhost.
-typedef enum RMW_PUBLIC_TYPE rmw_localhost_only_e
-{
+/// \brief 用于指定上下文是否只能通过本地主机进行通信。
+/// \brief Used to specify if the context can only communicate through localhost.
+typedef enum RMW_PUBLIC_TYPE rmw_localhost_only_e {
+  /// 使用 ROS_LOCALHOST_ONLY 环境变量。
   /// Uses ROS_LOCALHOST_ONLY environment variable.
   RMW_LOCALHOST_ONLY_DEFAULT = 0,
+
+  /// 强制仅使用本地主机。
   /// Forces using only localhost.
   RMW_LOCALHOST_ONLY_ENABLED = 1,
+
+  /// 强制禁用仅本地主机。
   /// Forces disabling localhost only.
   RMW_LOCALHOST_ONLY_DISABLED = 2,
 } rmw_localhost_only_t;

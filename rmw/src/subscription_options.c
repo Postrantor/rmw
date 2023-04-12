@@ -15,19 +15,30 @@
 #include "rmw/subscription_options.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-rmw_subscription_options_t
-rmw_get_default_subscription_options(void)
-{
+/**
+ * @brief 获取默认的订阅选项 (Get default subscription options)
+ *
+ * @return 返回一个 rmw_subscription_options_t 结构体，包含了默认的订阅选项 (Return an
+ * rmw_subscription_options_t structure containing the default subscription options)
+ */
+rmw_subscription_options_t rmw_get_default_subscription_options(void) {
+  // 定义并初始化一个 rmw_subscription_options_t 结构体变量 (Define and initialize an
+  // rmw_subscription_options_t structure variable)
   rmw_subscription_options_t subscription_options = {
-    .rmw_specific_subscription_payload = NULL,
-    .ignore_local_publications = false,
-    .require_unique_network_flow_endpoints = RMW_UNIQUE_NETWORK_FLOW_ENDPOINTS_NOT_REQUIRED,
-    .content_filter_options = NULL,
+      .rmw_specific_subscription_payload =
+          NULL,  // rmw 特定的订阅负载设置为 NULL (Set rmw specific subscription payload to NULL)
+      .ignore_local_publications = false,  // 不忽略本地发布 (Do not ignore local publications)
+      .require_unique_network_flow_endpoints =
+          RMW_UNIQUE_NETWORK_FLOW_ENDPOINTS_NOT_REQUIRED,  // 不需要唯一的网络流端点 (Unique network
+                                                           // flow endpoints not required)
+      .content_filter_options =
+          NULL,  // 内容过滤选项设置为 NULL (Set content filter options to NULL)
   };
+
+  // 返回已经初始化的订阅选项 (Return the initialized subscription options)
   return subscription_options;
 }
 

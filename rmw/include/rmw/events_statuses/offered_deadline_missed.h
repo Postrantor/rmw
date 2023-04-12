@@ -20,21 +20,25 @@
 #include "rmw/visibility_control.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /// QoS Deadline Missed information provided by a publisher.
-typedef struct RMW_PUBLIC_TYPE rmw_offered_deadline_missed_status_s
-{
+/// 发布者提供的 QoS Deadline Missed 信息。
+typedef struct RMW_PUBLIC_TYPE rmw_offered_deadline_missed_status_s {
   /**
    * Lifetime cumulative number of offered deadline periods elapsed during which a Publisher failed
    * to provide data.
    * Missed deadlines accumulate; that is, each deadline period the total_count will be incremented
    * by one.
+   *
+   * 生命周期内累计未满足的截止期数，在此期间发布者未能提供数据。
+   * 错过的截止日期会累积；也就是说，每个截止期，total_count 将增加一。
    */
   int32_t total_count;
+
   /// The change in total_count since the last time the status was last read.
+  /// 自上次读取状态以来，total_count 的变化。
   int32_t total_count_change;
 } rmw_offered_deadline_missed_status_t;
 

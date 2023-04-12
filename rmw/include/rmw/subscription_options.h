@@ -16,22 +16,31 @@
 #define RMW__SUBSCRIPTION_OPTIONS_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "rmw/types.h"
 
 // For now, the rmw_subscription_options_t type is still defined in "rmw/types.h".
+// 目前，rmw_subscription_options_t 类型仍在 "rmw/types.h" 中定义
+// At present, the rmw_subscription_options_t type is still defined in "rmw/types.h".
 
 /// Return a rmw_subscription_options_t initialized with default values.
-RMW_PUBLIC
-RMW_WARN_UNUSED
-rmw_subscription_options_t
-rmw_get_default_subscription_options(void);
+/// 返回一个用默认值初始化的 rmw_subscription_options_t。
+/**
+ * @return An rmw_subscription_options_t structure with default values.
+ * @返回一个具有默认值的 rmw_subscription_options_t 结构体。
+ */
+RMW_PUBLIC        // 定义为公共实用程序的宏。 Macro defining as a public utility.
+  RMW_WARN_UNUSED // 警告未使用的宏。 Macro warning for unused.
+
+    // 函数原型: rmw_get_default_subscription_options()
+    // Function prototype: rmw_get_default_subscription_options()
+    rmw_subscription_options_t
+    rmw_get_default_subscription_options(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // RMW__SUBSCRIPTION_OPTIONS_H_
+#endif // RMW__SUBSCRIPTION_OPTIONS_H_

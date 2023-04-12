@@ -19,13 +19,11 @@
 #include "rmw/visibility_control.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /// QoS Policy Kinds
-typedef enum RMW_PUBLIC_TYPE rmw_qos_policy_kind_e
-{
+typedef enum RMW_PUBLIC_TYPE rmw_qos_policy_kind_e {
   RMW_QOS_POLICY_INVALID = 1 << 0,
   RMW_QOS_POLICY_DURABILITY = 1 << 1,
   RMW_QOS_POLICY_DEADLINE = 1 << 2,

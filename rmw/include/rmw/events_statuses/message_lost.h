@@ -20,16 +20,20 @@
 #include "rmw/visibility_control.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-typedef struct RMW_PUBLIC_TYPE rmw_message_lost_status_s
-{
-  /// Total number of messages lost.
+/**
+ * @struct rmw_message_lost_status_s
+ * @brief 用于追踪丢失消息的状态 (A structure to track the status of lost messages)
+ */
+typedef struct RMW_PUBLIC_TYPE rmw_message_lost_status_s {
+  /// 已丢失的消息总数 (Total number of messages lost)
   size_t total_count;
-  /// Number of messages lost since last callback.
+
+  /// 自上次回调以来丢失的消息数 (Number of messages lost since last callback)
   size_t total_count_change;
+
 } rmw_message_lost_status_t;
 
 #ifdef __cplusplus

@@ -16,33 +16,68 @@
 #define RMW__RET_TYPES_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include <stdint.h>
 
-/// Return code for rmw functions
+/**
+ * @brief 返回码定义，用于 rmw 函数的返回值
+ * Return code definitions for rmw functions.
+ */
 typedef int32_t rmw_ret_t;
-/// The operation ran as expected
+
+/**
+ * @brief 操作正常运行，没有错误
+ * The operation ran as expected without errors.
+ */
 #define RMW_RET_OK 0
-/// Generic error to indicate operation could not complete successfully
+
+/**
+ * @brief 通用错误，表示操作无法成功完成
+ * Generic error to indicate the operation could not complete successfully.
+ */
 #define RMW_RET_ERROR 1
-/// The operation was halted early because it exceeded its timeout critera
+
+/**
+ * @brief 操作提前终止，因为超过了其超时条件
+ * The operation was halted early because it exceeded its timeout criteria.
+ */
 #define RMW_RET_TIMEOUT 2
-/// The operation or event handling is not supported.
+
+/**
+ * @brief 不支持操作或事件处理
+ * The operation or event handling is not supported.
+ */
 #define RMW_RET_UNSUPPORTED 3
 
-/// Failed to allocate memory
+/**
+ * @brief 内存分配失败
+ * Failed to allocate memory.
+ */
 #define RMW_RET_BAD_ALLOC 10
-/// Argument to function was invalid
+
+/**
+ * @brief 函数参数无效
+ * Argument to function was invalid.
+ */
 #define RMW_RET_INVALID_ARGUMENT 11
-/// Incorrect rmw implementation.
+
+/**
+ * @brief 不正确的 rmw 实现
+ * Incorrect rmw implementation.
+ */
 #define RMW_RET_INCORRECT_RMW_IMPLEMENTATION 12
 
-// rmw node specific ret codes in 2XX
-/// Failed to find node name
-// Using same return code than in rcl
+// rmw 节点特定返回代码在 2XX 中
+// rmw node specific return codes in the 2XX range.
+
+/**
+ * @brief 未找到节点名称
+ * Failed to find the node name.
+ * 使用与 rcl 相同的返回代码
+ * Using the same return code as in rcl.
+ */
 #define RMW_RET_NODE_NAME_NON_EXISTENT 203
 
 #ifdef __cplusplus

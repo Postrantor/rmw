@@ -18,103 +18,95 @@
 #include <stddef.h>
 
 #include "rmw/macros.h"
-#include "rmw/visibility_control.h"
 #include "rmw/types.h"
+#include "rmw/visibility_control.h"
 
 #if __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-/// Structure to hold a sequence of ROS messages.
-typedef struct RMW_PUBLIC_TYPE rmw_message_sequence_s
-{
-  /// Array of pointers to ROS messages.
-  void ** data;
-  /// The number of valid entries in `data`.
+/// 结构体用于存储ROS消息序列 (Structure to hold a sequence of ROS messages)
+typedef struct RMW_PUBLIC_TYPE rmw_message_sequence_s {
+  /// 指向ROS消息的指针数组 (Array of pointers to ROS messages)
+  void** data;
+  /// `data`中有效条目的数量 (The number of valid entries in `data`)
   size_t size;
-  /// The total allocated capacity of the data array.
+  /// 数据数组的总分配容量 (The total allocated capacity of the data array)
   size_t capacity;
-  /// The allocator used to allocate the data array.
-  rcutils_allocator_t * allocator;
+  /// 分配数据数组的分配器 (The allocator used to allocate the data array)
+  rcutils_allocator_t* allocator;
 } rmw_message_sequence_t;
 
-/// Structure to hold a sequence of message infos.
-typedef struct RMW_PUBLIC_TYPE rmw_message_info_sequence_s
-{
-  /// Array of message info.
-  rmw_message_info_t * data;
-  /// The number of valid entries in data.
+/// 结构体用于存储消息信息序列 (Structure to hold a sequence of message infos)
+typedef struct RMW_PUBLIC_TYPE rmw_message_info_sequence_s {
+  /// 消息信息数组 (Array of message info)
+  rmw_message_info_t* data;
+  /// 数据中有效条目的数量 (The number of valid entries in data)
   size_t size;
-  /// The total allocated capacity of the data array.
+  /// 数据数组的总分配容量 (The total allocated capacity of the data array)
   size_t capacity;
-  /// The allocator used to allocate the data array.
-  rcutils_allocator_t * allocator;
+  /// 分配数据数组的分配器 (The allocator used to allocate the data array)
+  rcutils_allocator_t* allocator;
 } rmw_message_info_sequence_t;
 
-/// Return an rmw_message_sequence_t struct with members initialized to `NULL`
+/// 返回一个成员初始化为`NULL`的rmw_message_sequence_t结构体 (Return an rmw_message_sequence_t
+/// struct with members initialized to `NULL`)
 RMW_PUBLIC
-rmw_message_sequence_t
-rmw_get_zero_initialized_message_sequence(void);
+rmw_message_sequence_t rmw_get_zero_initialized_message_sequence(void);
 
-/// Initialize an rmw_message_sequence_t object.
+/// 初始化一个rmw_message_sequence_t对象 (Initialize an rmw_message_sequence_t object)
 /**
- * \param[inout] sequence sequence object to be initialized.
- * \param[in] size capacity of the sequence to be allocated.
- * \param[in] allocator the allcator used to allocate memory.
+ * \param[inout] sequence 要初始化的序列对象 (sequence object to be initialized)
+ * \param[in] size 要分配的序列容量 (capacity of the sequence to be allocated)
+ * \param[in] allocator 用于分配内存的分配器 (the allcator used to allocate memory)
  */
 RMW_PUBLIC
-rmw_ret_t
-rmw_message_sequence_init(
-  rmw_message_sequence_t * sequence,
-  size_t size,
-  rcutils_allocator_t * allocator);
+rmw_ret_t rmw_message_sequence_init(rmw_message_sequence_t* sequence,
+                                    size_t size,
+                                    rcutils_allocator_t* allocator);
 
-/// Finalize an rmw_message_sequence_t object.
+/// 结束一个rmw_message_sequence_t对象 (Finalize an rmw_message_sequence_t object)
 /**
- * The rmw_message_sequence_t struct has members which require memory to be allocated to them
- * before setting values.
- * This function reclaims any allocated resources within the object and zeroes out all other
- * members.
+ * rmw_message_sequence_t结构体有需要在设置值之前为其分配内存的成员
+ * (The rmw_message_sequence_t struct has members which require memory to be allocated to them
+ * before setting values) 此函数回收对象中的任何分配资源并将所有其他成员归零 (This function reclaims
+ * any allocated resources within the object and zeroes out all other members)
  *
- * Note: This will not call `fini` or deallocate the underlying message structures.
+ * 注意：这不会调用`fini`或释放底层消息结构
+ * (Note: This will not call `fini` or deallocate the underlying message structures)
  *
- * \param[inout] sequence sequence object to be finalized.
+ * \param[inout] sequence 要结束的序列对象 (sequence object to be finalized)
  */
 RMW_PUBLIC
-rmw_ret_t
-rmw_message_sequence_fini(rmw_message_sequence_t * sequence);
+rmw_ret_t rmw_message_sequence_fini(rmw_message_sequence_t* sequence);
 
-/// Return an rmw_message_info_sequence_t struct with members initialized to `NULL`
+/// 返回一个成员初始化为`NULL`的rmw_message_info_sequence_t结构体 (Return an
+/// rmw_message_info_sequence_t struct with members initialized to `NULL`)
 RMW_PUBLIC
-rmw_message_info_sequence_t
-rmw_get_zero_initialized_message_info_sequence(void);
+rmw_message_info_sequence_t rmw_get_zero_initialized_message_info_sequence(void);
 
-/// Initialize an rmw_message_info_sequence_t object.
+/// 初始化一个rmw_message_info_sequence_t对象 (Initialize an rmw_message_info_sequence_t object)
 /**
- * \param[inout] sequence sequence object to be initialized.
- * \param[in] size capacity of the sequence to be allocated.
- * \param[in] allocator the allcator used to allocate memory.
+ * \param[inout] sequence 要初始化的序列对象 (sequence object to be initialized)
+ * \param[in] size 要分配的序列容量 (capacity of the sequence to be allocated)
+ * \param[in] allocator 用于分配内存的分配器 (the allcator used to allocate memory)
  */
 RMW_PUBLIC
-rmw_ret_t
-rmw_message_info_sequence_init(
-  rmw_message_info_sequence_t * sequence,
-  size_t size,
-  rcutils_allocator_t * allocator);
+rmw_ret_t rmw_message_info_sequence_init(rmw_message_info_sequence_t* sequence,
+                                         size_t size,
+                                         rcutils_allocator_t* allocator);
 
-/// Finalize an rmw_message_sequence_t object.
+/// 结束一个rmw_message_sequence_t对象 (Finalize an rmw_message_sequence_t object)
 /**
- * The rmw_message_sequence_t struct has members which require memory to be allocated to them
- * before setting values.
- * This function reclaims any allocated resources within the object and zeroes out all other
- * members.
+ * rmw_message_sequence_t结构体有需要在设置值之前为其分配内存的成员
+ * (The rmw_message_sequence_t struct has members which require memory to be allocated to them
+ * before setting values) 此函数回收对象中的任何分配资源并将所有其他成员归零 (This function reclaims
+ * any allocated resources within the object and zeroes out all other members)
  *
- * \param[inout] sequence sequence object to be finalized.
+ * \param[inout] sequence 要结束的序列对象 (sequence object to be finalized)
  */
 RMW_PUBLIC
-rmw_ret_t
-rmw_message_info_sequence_fini(rmw_message_info_sequence_t * sequence);
+rmw_ret_t rmw_message_info_sequence_fini(rmw_message_info_sequence_t* sequence);
 
 #if __cplusplus
 }

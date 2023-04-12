@@ -16,19 +16,22 @@
 #define RMW__PUBLISHER_OPTIONS_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #include "rmw/types.h"
 
 // For now, the rmw_publisher_options_t type is still defined in "rmw/types.h".
-
-/// Return a rmw_publisher_options_t initialized with default values.
+/**
+ * @brief 返回一个使用默认值初始化的 rmw_publisher_options_t。
+ * Return a rmw_publisher_options_t initialized with default values.
+ *
+ * @return 返回一个具有默认值的 rmw_publisher_options_t 结构体。
+ *         Returns a rmw_publisher_options_t structure with default values.
+ */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_publisher_options_t
-rmw_get_default_publisher_options(void);
+rmw_publisher_options_t rmw_get_default_publisher_options(void);
 
 #ifdef __cplusplus
 }

@@ -17,11 +17,18 @@
 
 #include "rcutils/macros.h"
 
-/// Expand the argument to its literal text
+/// 将参数扩展为其文本形式 (Expand the argument to its literal text)
+/// \param[in] x 输入参数，将被转换为字符串形式 (The input parameter that will be converted to a
+/// string form)
 #define RMW_STRINGIFY(x) RCUTILS_STRINGIFY(x)
 
-/// Indicate that the caller of a method must check the return value,
-/// otherwise the compiler will issue a warning.
+/// 表示方法的调用者必须检查返回值，否则编译器会发出警告。
+/// (Indicate that the caller of a method must check the return value,
+/// otherwise the compiler will issue a warning.)
+///
+/// 使用此宏可以确保在调用函数时检查返回值，从而提高代码质量和减少错误。
+/// (Using this macro ensures that the return value is checked when calling functions,
+/// which improves code quality and reduces errors.)
 #define RMW_WARN_UNUSED RCUTILS_WARN_UNUSED
 
 #endif  // RMW__MACROS_H_

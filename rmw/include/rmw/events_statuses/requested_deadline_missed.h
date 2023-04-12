@@ -20,21 +20,23 @@
 #include "rmw/visibility_control.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-/// QoS Requested Deadline Missed information provided by a subscription.
-typedef struct RMW_PUBLIC_TYPE rmw_requested_deadline_missed_status_s
-{
+/// @brief QoS 请求截止日期未满足的信息，由订阅提供。 (QoS Requested Deadline Missed information
+/// provided by a subscription.)
+typedef struct RMW_PUBLIC_TYPE rmw_requested_deadline_missed_status_s {
   /**
-   * Lifetime cumulative number of missed deadlines detected for any instance read by the
-   * subscription.
-   * Missed deadlines accumulate; that is, each deadline period the total_count will be incremented
-   * by one for each instance for which data was not received.
+   * @brief 订阅读取的任何实例的生命周期累积未满足的截止日期数量。
+   * 未满足的截止日期会累积；也就是说，每个截止日期周期，对于未收到数据的每个实例，total_count
+   * 将增加一个。 (Lifetime cumulative number of missed deadlines detected for any instance read by
+   * the subscription. Missed deadlines accumulate; that is, each deadline period the total_count
+   * will be incremented by one for each instance for which data was not received.)
    */
   int32_t total_count;
-  /// The incremental number of deadlines detected since the status was read.
+
+  /// @brief 自上次读取状态以来检测到的截止日期的增量数量。 (The incremental number of deadlines
+  /// detected since the status was read.)
   int32_t total_count_change;
 } rmw_requested_deadline_missed_status_t;
 
