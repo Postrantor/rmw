@@ -57,8 +57,8 @@ rmw_topic_endpoint_info_t rmw_get_zero_initialized_topic_endpoint_info(void) {
  * @param[in] allocator 分配器实例 (Allocator instance)
  * @return rmw_ret_t 结果状态 (Result status)
  */
-rmw_ret_t _rmw_topic_endpoint_info_fini_str(const char **topic_endpoint_info_str,
-                                            rcutils_allocator_t *allocator) {
+rmw_ret_t _rmw_topic_endpoint_info_fini_str(
+    const char **topic_endpoint_info_str, rcutils_allocator_t *allocator) {
   // 使用分配器释放字符串内存 (Use the allocator to release the string memory)
   allocator->deallocate((char *)*topic_endpoint_info_str, allocator->state);
   // 将字符串指针设置为 NULL (Set the string pointer to NULL)
@@ -75,8 +75,8 @@ rmw_ret_t _rmw_topic_endpoint_info_fini_str(const char **topic_endpoint_info_str
  * @param[in] allocator 分配器实例 (Allocator instance)
  * @return rmw_ret_t 结果状态 (Result status)
  */
-rmw_ret_t _rmw_topic_endpoint_info_fini_node_name(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                  rcutils_allocator_t *allocator) {
+rmw_ret_t _rmw_topic_endpoint_info_fini_node_name(
+    rmw_topic_endpoint_info_t *topic_endpoint_info, rcutils_allocator_t *allocator) {
   // 调用 _rmw_topic_endpoint_info_fini_str 释放节点名称字符串 (Call
   // _rmw_topic_endpoint_info_fini_str to release the node name string)
   return _rmw_topic_endpoint_info_fini_str(&topic_endpoint_info->node_name, allocator);
@@ -105,8 +105,8 @@ rmw_ret_t _rmw_topic_endpoint_info_fini_node_namespace(
  * @param[in] allocator 分配器实例 (Allocator instance)
  * @return rmw_ret_t 结果状态 (Result status)
  */
-rmw_ret_t _rmw_topic_endpoint_info_fini_topic_type(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                   rcutils_allocator_t *allocator) {
+rmw_ret_t _rmw_topic_endpoint_info_fini_topic_type(
+    rmw_topic_endpoint_info_t *topic_endpoint_info, rcutils_allocator_t *allocator) {
   // 调用 _rmw_topic_endpoint_info_fini_str 释放话题类型字符串 (Call
   // _rmw_topic_endpoint_info_fini_str to release the topic type string)
   return _rmw_topic_endpoint_info_fini_str(&topic_endpoint_info->topic_type, allocator);
@@ -120,8 +120,8 @@ rmw_ret_t _rmw_topic_endpoint_info_fini_topic_type(rmw_topic_endpoint_info_t *to
  * @param[in] allocator 分配器实例 (Allocator instance)
  * @return rmw_ret_t 结果状态 (Result status)
  */
-rmw_ret_t rmw_topic_endpoint_info_fini(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                       rcutils_allocator_t *allocator) {
+rmw_ret_t rmw_topic_endpoint_info_fini(
+    rmw_topic_endpoint_info_t *topic_endpoint_info, rcutils_allocator_t *allocator) {
   // 检查参数是否有效 (Check if the arguments are valid)
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
 
@@ -171,9 +171,8 @@ rmw_ret_t rmw_topic_endpoint_info_fini(rmw_topic_endpoint_info_t *topic_endpoint
  * @param[in,out] allocator Allocator
  * @return rmw_ret_t Return operation result
  */
-rmw_ret_t _rmw_topic_endpoint_info_copy_str(const char **topic_endpoint_info_str,
-                                            const char *str,
-                                            rcutils_allocator_t *allocator) {
+rmw_ret_t _rmw_topic_endpoint_info_copy_str(
+    const char **topic_endpoint_info_str, const char *str, rcutils_allocator_t *allocator) {
   // 检查输入参数是否有效，如果无效则返回 RMW_RET_INVALID_ARGUMENT 错误
   // Check if input arguments are valid, return RMW_RET_INVALID_ARGUMENT error if invalid
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
@@ -223,9 +222,10 @@ rmw_ret_t _rmw_topic_endpoint_info_copy_str(const char **topic_endpoint_info_str
  * @param[in,out] allocator Allocator
  * @return rmw_ret_t Return operation result
  */
-rmw_ret_t rmw_topic_endpoint_info_set_topic_type(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                 const char *topic_type,
-                                                 rcutils_allocator_t *allocator) {
+rmw_ret_t rmw_topic_endpoint_info_set_topic_type(
+    rmw_topic_endpoint_info_t *topic_endpoint_info,
+    const char *topic_type,
+    rcutils_allocator_t *allocator) {
   // 检查输入参数是否有效，如果无效则返回 RMW_RET_INVALID_ARGUMENT 错误
   // Check if input arguments are valid, return RMW_RET_INVALID_ARGUMENT error if invalid
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
@@ -275,9 +275,10 @@ rmw_ret_t rmw_topic_endpoint_info_set_topic_type_hash(
  * @param[in,out] allocator Allocator
  * @return rmw_ret_t Return operation result
  */
-rmw_ret_t rmw_topic_endpoint_info_set_node_name(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                const char *node_name,
-                                                rcutils_allocator_t *allocator) {
+rmw_ret_t rmw_topic_endpoint_info_set_node_name(
+    rmw_topic_endpoint_info_t *topic_endpoint_info,
+    const char *node_name,
+    rcutils_allocator_t *allocator) {
   // 检查输入参数是否有效，如果无效则返回 RMW_RET_INVALID_ARGUMENT 错误
   // Check if input arguments are valid, return RMW_RET_INVALID_ARGUMENT error if invalid
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
@@ -305,9 +306,10 @@ rmw_ret_t rmw_topic_endpoint_info_set_node_name(rmw_topic_endpoint_info_t *topic
  * @param[in,out] allocator Allocator
  * @return rmw_ret_t Return operation result
  */
-rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                     const char *node_namespace,
-                                                     rcutils_allocator_t *allocator) {
+rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(
+    rmw_topic_endpoint_info_t *topic_endpoint_info,
+    const char *node_namespace,
+    rcutils_allocator_t *allocator) {
   // 检查输入参数是否有效，如果无效则返回 RMW_RET_INVALID_ARGUMENT 错误
   // Check if input arguments are valid, return RMW_RET_INVALID_ARGUMENT error if invalid
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
@@ -319,8 +321,8 @@ rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(rmw_topic_endpoint_info_t *
     RMW_SET_ERROR_MSG("topic_endpoint_info is null");
     return RMW_RET_INVALID_ARGUMENT;
   }
-  return _rmw_topic_endpoint_info_copy_str(&topic_endpoint_info->node_namespace, node_namespace,
-                                           allocator);
+  return _rmw_topic_endpoint_info_copy_str(
+      &topic_endpoint_info->node_namespace, node_namespace, allocator);
 }
 
 /**
@@ -334,8 +336,8 @@ rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(rmw_topic_endpoint_info_t *
  * @param[in] type Endpoint type
  * @return rmw_ret_t Return operation result
  */
-rmw_ret_t rmw_topic_endpoint_info_set_endpoint_type(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                    rmw_endpoint_type_t type) {
+rmw_ret_t rmw_topic_endpoint_info_set_endpoint_type(
+    rmw_topic_endpoint_info_t *topic_endpoint_info, rmw_endpoint_type_t type) {
   // 检查输入参数是否有效，如果无效则返回 RMW_RET_INVALID_ARGUMENT 错误
   // Check if input arguments are valid, return RMW_RET_INVALID_ARGUMENT error if invalid
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
@@ -363,9 +365,8 @@ rmw_ret_t rmw_topic_endpoint_info_set_endpoint_type(rmw_topic_endpoint_info_t *t
  * @param[in] size GID 的大小 (Size of the GID)
  * @return rmw_ret_t 返回操作结果 (Return operation result)
  */
-rmw_ret_t rmw_topic_endpoint_info_set_gid(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                          const uint8_t *gid,
-                                          size_t size) {
+rmw_ret_t rmw_topic_endpoint_info_set_gid(
+    rmw_topic_endpoint_info_t *topic_endpoint_info, const uint8_t *gid, size_t size) {
   // 检查错误条件并返回错误 (Check error conditions and return error)
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
 
@@ -402,8 +403,9 @@ rmw_ret_t rmw_topic_endpoint_info_set_gid(rmw_topic_endpoint_info_t *topic_endpo
  * @param[in] qos_profile 要设置的 QoS 配置文件指针 (Pointer to the QoS profile to be set)
  * @return rmw_ret_t 返回操作结果 (Return operation result)
  */
-rmw_ret_t rmw_topic_endpoint_info_set_qos_profile(rmw_topic_endpoint_info_t *topic_endpoint_info,
-                                                  const rmw_qos_profile_t *qos_profile) {
+rmw_ret_t rmw_topic_endpoint_info_set_qos_profile(
+    rmw_topic_endpoint_info_t *topic_endpoint_info,  //
+    const rmw_qos_profile_t *qos_profile) {
   // 检查错误条件并返回错误 (Check error conditions and return error)
   RCUTILS_CAN_RETURN_WITH_ERROR_OF(RMW_RET_INVALID_ARGUMENT);
 

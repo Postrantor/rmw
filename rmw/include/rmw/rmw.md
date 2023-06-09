@@ -1,6 +1,370 @@
 ##
 
 ```c
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include "rcutils/allocator.h"
+#include "rcutils/macros.h"
+#include "rcutils/types.h"
+#include "rmw/dynamic_message_type_support.h"
+#include "rmw/event.h"
+#include "rmw/event_callback_type.h"
+#include "rmw/init.h"
+#include "rmw/macros.h"
+#include "rmw/message_sequence.h"
+#include "rmw/publisher_options.h"
+#include "rmw/qos_profiles.h"
+#include "rmw/subscription_options.h"
+#include "rmw/types.h"
+#include "rmw/visibility_control.h"
+#include "rosidl_runtime_c/message_type_support_struct.h"
+#include "rosidl_runtime_c/sequence_bound.h"
+#include "rosidl_runtime_c/service_type_support_struct.h"
+
+/// 获取正在使用的 rmw 实现的名称
+const char* rmw_get_implementation_identifier(void);
+
+/// 获取此中间件的唯一序列化格式
+const char* rmw_get_serialization_format(void);
+
+// TODO(wjwwood): refactor this API to return a return code when updated to use an allocator
+/// 创建一个节点并返回指向该节点的句柄
+rmw_node_t* rmw_create_node(rmw_context_t* context, const char* name, const char* namespace_);
+
+/// 最终确定给定的节点句柄，回收资源并释放节点句柄。
+rmw_ret_t rmw_destroy_node(rmw_node_t* node);
+
+RCUTILS_DEPRECATED_WITH_MSG(
+    "rmw_node_assert_liveliness implementation was removed."
+    " If manual liveliness assertion is needed, use MANUAL_BY_TOPIC.")
+rmw_ret_t rmw_node_assert_liveliness(const rmw_node_t* node);
+
+/// 返回一个触发器条件，当 ROS 图发生更改时触发。
+const rmw_guard_condition_t* rmw_node_get_graph_guard_condition(const rmw_node_t* node);
+
+/// 初始化一个用于后续发布的发布者分配。
+rmw_ret_t rmw_init_publisher_allocation(
+    const rosidl_message_type_support_t* type_support,
+    const rosidl_runtime_c__Sequence__bound* message_bounds,
+    rmw_publisher_allocation_t* allocation);
+
+/// 销毁一个发布者分配对象。
+rmw_ret_t rmw_fini_publisher_allocation(rmw_publisher_allocation_t* allocation);
+
+/// 创建一个发布者并返回指向该发布者的句柄。
+rmw_publisher_t* rmw_create_publisher(
+    const rmw_node_t* node,
+    const rosidl_message_type_support_t* type_support,
+    const char* topic_name,
+    const rmw_qos_profile_t* qos_profile,
+    const rmw_publisher_options_t* publisher_options);
+
+/// 结束给定的发布者句柄，回收资源，并释放发布者句柄。
+rmw_ret_t rmw_destroy_publisher(rmw_node_t* node, rmw_publisher_t* publisher);
+
+/// 借用一个已借出的 ROS 消息。
+rmw_ret_t rmw_borrow_loaned_message(
+    const rmw_publisher_t* publisher,
+    const rosidl_message_type_support_t* type_support,
+    void** ros_message);
+
+/// 返回一个之前从发布者借用的消息。
+rmw_ret_t rmw_return_loaned_message_from_publisher(
+    const rmw_publisher_t* publisher, void* loaned_message);
+
+/// 发布一个 ROS 消息。
+rmw_ret_t rmw_publish(
+    const rmw_publisher_t* publisher,
+    const void* ros_message,
+    rmw_publisher_allocation_t* allocation);
+
+/// 发布一个借用的 ROS 消息。
+rmw_ret_t rmw_publish_loaned_message(
+    const rmw_publisher_t* publisher, void* ros_message, rmw_publisher_allocation_t* allocation);
+
+/// 获取与发布者匹配的订阅数量。
+rmw_ret_t rmw_publisher_count_matched_subscriptions(
+    const rmw_publisher_t* publisher, size_t* subscription_count);
+
+/// 获取发布者的实际 qos 设置。
+rmw_ret_t rmw_publisher_get_actual_qos(const rmw_publisher_t* publisher, rmw_qos_profile_t* qos);
+
+/// 发布一个序列化为字节流的 ROS 消息。
+rmw_ret_t rmw_publish_serialized_message(
+    const rmw_publisher_t* publisher,
+    const rmw_serialized_message_t* serialized_message,
+    rmw_publisher_allocation_t* allocation);
+
+/// 计算序列化消息的大小。
+rmw_ret_t rmw_get_serialized_message_size(
+    const rosidl_message_type_support_t* type_support,
+    const rosidl_runtime_c__Sequence__bound* message_bounds,
+    size_t* size);
+
+/// 手动声明此发布者是活跃的（针对 RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC）
+rmw_ret_t rmw_publisher_assert_liveliness(const rmw_publisher_t* publisher);
+
+/// 等待所有已发布的消息数据被确认或直到指定的超时时间过去。
+rmw_ret_t rmw_publisher_wait_for_all_acked(
+    const rmw_publisher_t* publisher, rmw_time_t wait_timeout);
+
+/// 将 ROS 消息序列化为 rmw_serialized_message_t。
+rmw_ret_t rmw_serialize(
+    const void* ros_message,                            // 输入的 ROS 消息
+    const rosidl_message_type_support_t* type_support,  // 输入的 ROS 消息的类型支持
+    rmw_serialized_message_t* serialized_message);      // 序列化 ROS 消息的目标
+
+/// 反序列化一个 ROS 消息。
+rmw_ret_t rmw_deserialize(
+    const rmw_serialized_message_t* serialized_message,
+    const rosidl_message_type_support_t* type_support,
+    void* ros_message);
+
+/// 初始化一个用于后续 `take` 的订阅分配。
+rmw_ret_t rmw_init_subscription_allocation(
+    const rosidl_message_type_support_t* type_support,
+    const rosidl_runtime_c__Sequence__bound* message_bounds,
+    rmw_subscription_allocation_t* allocation);
+
+/// 销毁一个发布者分配对象。
+rmw_ret_t rmw_fini_subscription_allocation(rmw_subscription_allocation_t* allocation);
+
+/// 创建一个订阅并返回该订阅的句柄。
+rmw_subscription_t* rmw_create_subscription(
+    const rmw_node_t* node,
+    const rosidl_message_type_support_t* type_support,
+    const char* topic_name,
+    const rmw_qos_profile_t* qos_policies,
+    const rmw_subscription_options_t* subscription_options);
+
+/// 释放给定的订阅句柄，回收资源，并释放订阅句柄。
+rmw_ret_t rmw_destroy_subscription(rmw_node_t* node, rmw_subscription_t* subscription);
+
+/// 检索与订阅匹配的发布者数量。
+rmw_ret_t rmw_subscription_count_matched_publishers(
+    const rmw_subscription_t* subscription, size_t* publisher_count);
+
+/// 获取订阅的实际QoS设置。
+rmw_ret_t rmw_subscription_get_actual_qos(
+    const rmw_subscription_t* subscription, rmw_qos_profile_t* qos);
+
+/// 设置订阅的内容过滤选项。
+rmw_ret_t rmw_subscription_set_content_filter(
+    rmw_subscription_t* subscription, const rmw_subscription_content_filter_options_t* options);
+
+/// 检索订阅的内容过滤器选项。
+rmw_ret_t rmw_subscription_get_content_filter(
+    const rmw_subscription_t* subscription,
+    rcutils_allocator_t* allocator,
+    rmw_subscription_content_filter_options_t* options);
+
+/// 接收一个传入的 ROS 消息。
+rmw_ret_t rmw_take(
+    const rmw_subscription_t* subscription,
+    void* ros_message,
+    bool* taken,
+    rmw_subscription_allocation_t* allocation);
+
+/// 接收一个带有元数据的 ROS 消息。
+rmw_ret_t rmw_take_with_info(
+    const rmw_subscription_t* subscription,
+    void* ros_message,
+    bool* taken,
+    rmw_message_info_t* message_info,
+    rmw_subscription_allocation_t* allocation);
+
+/// 从给定的订阅中获取多个连续的 ROS 消息及其元数据。
+rmw_ret_t rmw_take_sequence(
+    const rmw_subscription_t* subscription,
+    size_t count,
+    rmw_message_sequence_t* message_sequence,
+    rmw_message_info_sequence_t* message_info_sequence,
+    size_t* taken,
+    rmw_subscription_allocation_t* allocation);
+
+/// 以字节流形式获取传入的 ROS 消息。
+rmw_ret_t rmw_take_serialized_message(
+    const rmw_subscription_t* subscription,
+    rmw_serialized_message_t* serialized_message,
+    bool* taken,
+    rmw_subscription_allocation_t* allocation);
+
+/// 以字节流及其元数据的形式接收传入的 ROS 消息。
+rmw_ret_t rmw_take_serialized_message_with_info(
+    const rmw_subscription_t* subscription,
+    rmw_serialized_message_t* serialized_message,
+    bool* taken,
+    rmw_message_info_t* message_info,
+    rmw_subscription_allocation_t* allocation);
+
+/// 通过中间件借用的传入ROS消息。
+rmw_ret_t rmw_take_loaned_message(
+    const rmw_subscription_t* subscription,
+    void** loaned_message,
+    bool* taken,
+    rmw_subscription_allocation_t* allocation);
+
+/// 借用一条消息并附带其额外的消息信息。
+rmw_ret_t rmw_take_loaned_message_with_info(
+    const rmw_subscription_t* subscription,
+    void** loaned_message,
+    bool* taken,
+    rmw_message_info_t* message_info,
+    rmw_subscription_allocation_t* allocation);
+
+/// 返回一个从订阅中借用的 ROS 消息。
+rmw_ret_t rmw_return_loaned_message_from_subscription(
+    const rmw_subscription_t* subscription, void* loaned_message);
+
+/// 创建一个服务客户端，可以向服务服务器发送请求并接收回复。
+rmw_client_t* rmw_create_client(
+    const rmw_node_t* node,
+    const rosidl_service_type_support_t* type_support,
+    const char* service_name,
+    const rmw_qos_profile_t* qos_policies);
+
+/// 销毁并从其节点中注销服务客户端
+rmw_ret_t rmw_destroy_client(rmw_node_t* node, rmw_client_t* client);
+
+/// 发送一个 ROS 服务请求
+rmw_ret_t rmw_send_request(
+    const rmw_client_t* client, const void* ros_request, int64_t* sequence_id);
+
+/// 接收一个传入的ROS服务响应。
+rmw_ret_t rmw_take_response(
+    const rmw_client_t* client,
+    rmw_service_info_t* request_header,
+    void* ros_response,
+    bool* taken);
+
+/// 获取客户端请求发布器的实际qos设置。
+rmw_ret_t rmw_client_request_publisher_get_actual_qos(
+    const rmw_client_t* client, rmw_qos_profile_t* qos);
+
+/// 获取客户端响应订阅的实际qos设置。
+rmw_ret_t rmw_client_response_subscription_get_actual_qos(
+    const rmw_client_t* client, rmw_qos_profile_t* qos);
+
+/// 创建一个服务服务器，可以从服务客户端接收请求并发送回复。
+rmw_service_t* rmw_create_service(
+    const rmw_node_t* node,
+    const rosidl_service_type_support_t* type_support,
+    const char* service_name,
+    const rmw_qos_profile_t* qos_profile);
+
+/// 销毁并从节点中取消注册一个服务服务器
+rmw_ret_t rmw_destroy_service(rmw_node_t* node, rmw_service_t* service);
+
+/// 接收一个传入的ROS服务请求。
+rmw_ret_t rmw_take_request(
+    const rmw_service_t* service,
+    rmw_service_info_t* request_header,
+    void* ros_request,
+    bool* taken);
+
+/// 发送 ROS 服务响应。
+rmw_ret_t rmw_send_response(
+    const rmw_service_t* service, rmw_request_id_t* request_header, void* ros_response);
+
+/// 获取服务请求订阅的实际 qos 设置。
+rmw_ret_t rmw_service_request_subscription_get_actual_qos(
+    const rmw_service_t* service, rmw_qos_profile_t* qos);
+
+/// 检索服务响应发布器的实际 qos 设置。
+rmw_ret_t rmw_service_response_publisher_get_actual_qos(
+    const rmw_service_t* service, rmw_qos_profile_t* qos);
+
+// TODO(wjwwood): 当更新使用分配器时，重构此 API 以返回返回代码
+/// 创建一个守卫条件并返回该守卫条件的句柄。
+rmw_guard_condition_t* rmw_create_guard_condition(rmw_context_t* context);
+
+/// 最终确定给定的监视条件句柄，回收资源，并释放句柄。
+rmw_ret_t rmw_destroy_guard_condition(rmw_guard_condition_t* guard_condition);
+
+rmw_ret_t rmw_trigger_guard_condition(const rmw_guard_condition_t* guard_condition);
+
+/// 创建一个等待集，用于存储中间件可以等待的条件。
+rmw_wait_set_t* rmw_create_wait_set(rmw_context_t* context, size_t max_conditions);
+
+/// 销毁一个等待集 (Destroy a wait set).
+rmw_ret_t rmw_destroy_wait_set(rmw_wait_set_t* wait_set);
+
+/// 等待不同实体的集合，并在有一个准备好时返回。
+rmw_ret_t rmw_wait(
+    rmw_subscriptions_t* subscriptions,
+    rmw_guard_conditions_t* guard_conditions,
+    rmw_services_t* services,
+    rmw_clients_t* clients,
+    rmw_events_t* events,
+    rmw_wait_set_t* wait_set,
+    const rmw_time_t* wait_timeout);
+
+/// 返回 ROS 图中所有节点的名称和命名空间。
+rmw_ret_t rmw_get_node_names(
+    const rmw_node_t* node,
+    rcutils_string_array_t* node_names,
+    rcutils_string_array_t* node_namespaces);
+
+/// 返回 ROS 图中所有节点的名称、命名空间和围场(enclave)名称。
+rmw_ret_t rmw_get_node_names_with_enclaves(
+    const rmw_node_t* node,
+    rcutils_string_array_t* node_names,
+    rcutils_string_array_t* node_namespaces,
+    rcutils_string_array_t* enclaves);
+
+/// 计算匹配主题名称的已知发布者数量。
+rmw_ret_t rmw_count_publishers(const rmw_node_t* node, const char* topic_name, size_t* count);
+
+/// 计算匹配主题名称的已知订阅者数量。
+rmw_ret_t rmw_count_subscribers(const rmw_node_t* node, const char* topic_name, size_t* count);
+
+/// 计算匹配服务名称的已知客户端数量。
+rmw_ret_t rmw_count_clients(const rmw_node_t* node, const char* service_name, size_t* count);
+
+/// 计算匹配服务名的已知服务器数量。
+rmw_ret_t rmw_count_services(const rmw_node_t* node, const char* service_name, size_t* count);
+
+/// 获取发布者的全局唯一标识符 (GID)。
+rmw_ret_t rmw_get_gid_for_publisher(const rmw_publisher_t* publisher, rmw_gid_t* gid);
+
+/// 获取服务客户端的全局唯一标识符 (GID)。
+/// 检查两个全局唯一标识符（GIDs）是否相等。
+rmw_ret_t rmw_compare_gids_equal(const rmw_gid_t* gid1, const rmw_gid_t* gid2, bool* result);
+
+rmw_ret_t rmw_get_gid_for_client(const rmw_client_t* client, rmw_gid_t* gid);
+
+/// 检查两个全局唯一标识符（GIDs）是否相等。
+rmw_ret_t rmw_compare_gids_equal(const rmw_gid_t* gid1, const rmw_gid_t* gid2, bool* result);
+
+/// 检查给定服务客户端是否有可用的服务服务器。
+rmw_ret_t rmw_service_server_is_available(
+    const rmw_node_t* node, const rmw_client_t* client, bool* is_available);
+
+/// 设置当前日志严重级别
+rmw_ret_t rmw_set_log_severity(rmw_log_severity_t severity);
+
+/// 为订阅设置新消息回调函数
+rmw_ret_t rmw_subscription_set_on_new_message_callback(
+    rmw_subscription_t* subscription, rmw_event_callback_t callback, const void* user_data);
+
+/// 设置服务的新请求回调函数。
+rmw_ret_t rmw_service_set_on_new_request_callback(
+    rmw_service_t* service, rmw_event_callback_t callback, const void* user_data);
+
+/// 设置客户端的新响应回调函数。
+rmw_ret_t rmw_client_set_on_new_response_callback(
+    rmw_client_t* client, rmw_event_callback_t callback, const void* user_data);
+
+/// 设置事件的回调函数。
+rmw_ret_t rmw_event_set_callback(
+    rmw_event_t* event, rmw_event_callback_t callback, const void* user_data);
+```
+
+##
+
+```c
 const char* rmw_get_implementation_identifier(void);
 const char* rmw_get_serialization_format(void);
 rmw_node_t* rmw_create_node(rmw_context_t* context, const char* name, const char* namespace_);

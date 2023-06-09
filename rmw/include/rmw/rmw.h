@@ -16,10 +16,6 @@
  *
  * `rmw` 定义了由更高级别的 ROS API 使用的中间件原语接口。
  * 它包括以下主要组件：
- *
- * `rmw` defines an interface of middleware primitives that are used by the higher level ROS API's.
- * It consists of these main components:
- *
  * - 初始化和关闭 (Initialization and Shutdown):
  *   - rmw/init.h
  * - 节点 (Nodes)
@@ -34,8 +30,6 @@
  *   - rmw/rmw.h
  *
  * 与"主题"或"服务"结合使用的一些通用实用功能：
- *
- * There are some common utility functions in combination with "Topics" or "Services":
  * - 验证全限定主题或服务名称的函数
  *   - rmw_validate_full_topic_name()
  *   - rmw/validate_full_topic_name.h
@@ -50,9 +44,6 @@
  *   - rmw/qos_profiles.h
  *
  * 它还具有等待和处理这些概念所需的一些机制：
- *
- * It also has some machinery that is necessary to wait on and act on these concepts:
- *
  * - 初始化和关闭管理（目前为全局）
  *   - rmw/rmw.h
  * - 等待集，用于等待消息和服务请求/响应准备就绪
@@ -69,9 +60,6 @@
  *   - rmw/get_service_names_and_types.h
  *
  * 此外还有一些有用的抽象和实用程序：
- *
- * Further still there are some useful abstractions and utilities:
- *
  * - 各种类型的分配器函数
  *   - rmw/allocators.h
  * - 错误处理功能（C 风格）
@@ -388,56 +376,31 @@ rmw_ret_t rmw_fini_publisher_allocation(rmw_publisher_allocation_t* allocation);
 /// Create a publisher and return a handle to that publisher.
 /**
  * 本函数可能失败，因此在以下情况下会返回 `NULL`：
- * This function can fail, and therefore return `NULL`, if:
  *   - 节点不是由 `rmw_create_node()` 返回的有效非空句柄
- *   - node is not a valid non-null handle for this rmw implementation,
- *     as returned by `rmw_create_node()`
  *   - type_support 不是有效的非空消息类型支持，由 `ROSIDL_GET_MSG_TYPE_SUPPORT()` 返回
- *   - type_support is a not valid non-null message type support, as returned by
- *     `ROSIDL_GET_MSG_TYPE_SUPPORT()`
  *   - topic_name 不是根据 `rmw_validate_full_topic_name()` 的有效非空主题名称
- *   - topic_name is not a valid non-null topic name, according to
- *     `rmw_validate_full_topic_name()`
  *   - qos_profile 不是完全指定的非空配置文件，即没有未知策略
- *   - qos_profile is not a fully specified non-null profile i.e. no UNKNOWN policies
  *   - publisher_options 不是有效的非空选项集，由 `rmw_get_default_publisher_options()` 返回
- *   - publisher_options is not a valid non-null option set, as returned by
- *     `rmw_get_default_publisher_options()`
  *   - 发布者创建过程中内存分配失败
- *   - memory allocation fails during publisher creation
  *   - 发生未指定错误
- *   - an unspecified error occurs
  *
  * <hr>
  * 属性                | 遵循
- * Attribute          | Adherence
  * ------------------ | -------------
  * 分配内存            | 是
- * Allocates Memory   | Yes
  * 线程安全            | 否
- * Thread-Safe        | No
  * 使用原子操作        | 也许[1]
- * Uses Atomics       | Maybe [1]
  * 无锁                | 也许[1]
- * Lock-Free          | Maybe [1]
  * <i>[1] 由 rmw 实现定义，请查阅实现文档</i>
- * <i>[1] rmw implementation defined, check the implementation documentation</i>
  *
  * \param[in] node 用于注册此发布者的节点句柄
- * \param[in] node Handle to node with which to register this publisher
  * \param[in] type_support 要发布的消息的类型支持
- * \param[in] type_support Type support for the messages to be published
  * \param[in] topic_name 要发布到的主题名称，通常是一个完全限定的主题名称，除非 `qos_profile`
  * 配置为避免 ROS 命名空间约定，即创建本地主题发布者
- * \param[in] topic_name Name of the topic to
- * publish to, often a fully qualified topic name unless `qos_profile` is configured to avoid ROS
- * namespace conventions i.e. to create a native topic publisher
  * \param[in] qos_profile 此发布者的 QoS 策略
- * \param[in] qos_profile QoS policies for this publisher
  * \param[in] publisher_options 配置此发布者的选项
- * \param[in] publisher_options Options to configure this publisher
+ *
  * \return rmw 发布者句柄，如果出现错误则返回 `NULL`
- * \return rmw publisher handle, or `NULL` if there was an error
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
@@ -1135,38 +1098,6 @@ rmw_ret_t rmw_serialize(
  * \return `RMW_RET_BAD_ALLOC` 如果内存分配失败，或
  * \return `RMW_RET_ERROR` 如果发生意外错误。
  */
-/// Deserialize a ROS message.
-/**
- * The given rmw_serialized_message_t's internal byte stream buffer is deserialized
- * into the given ROS message.
- * The serialization format expected in the rmw_serialized_message_t depends on the
- * underlying implementation.
- *
- * \pre Given serialized message must be a valid non-null instance, such
- *   as that returned by `rmw_serialize()`, matching provided typesupport
- *   and ROS message.
- * \pre Given typesupport must be a valid non-null instance, as provided
- *   by `rosidl` APIs.
- * \pre Given ROS message must be a valid non-null instance, initialized
- *   by the caller.
- *
- * <hr>
- * Attribute          | Adherence
- * ------------------ | -------------
- * Allocates Memory   | Maybe [1]
- * Thread-Safe        | No
- * Uses Atomics       | Maybe [2]
- * Lock-Free          | Maybe [2]
- * <i>[1] if the given ROS message contains unbounded fields</i>
- * <i>[2] rmw implementation defined, check the implementation documentation</i>
- *
- * \param[in] serialized_message the serialized message holding the byte stream
- * \param[in] type_support the typesupport for the typed ros message
- * \param[out] ros_message destination for the deserialized ROS message
- * \return `RMW_RET_OK` if successful, or
- * \return `RMW_RET_BAD_ALLOC` if memory allocation failed, or
- * \return `RMW_RET_ERROR` if an unexpected error occurs.
- */
 RMW_PUBLIC
 RMW_WARN_UNUSED
 rmw_ret_t rmw_deserialize(
@@ -1178,22 +1109,18 @@ rmw_ret_t rmw_deserialize(
 /// later `take`s.)
 /**
  * 这将创建一个分配对象，该对象可以与 rmw_take 方法结合使用，
- * 以更精细地控制内存分配。 (This creates an allocation object that can be used in conjunction with
- * the rmw_take method to perform more carefully control memory allocations.)
+ * 以更精细地控制内存分配。
  *
  * 这将允许中间件为给定的消息类型和消息边界预先分配正确的内存量。
- * (This will allow the middleware to preallocate the correct amount of memory for a given message
- * type and message bounds.) 由于在此方法中执行分配，因此不需要在 `rmw_take` 方法中分配。 (As
- * allocation is performed in this method, it will not be necessary to allocate in the `rmw_take`
- * method.)
+ * 由于在此方法中执行分配，因此不需要在 `rmw_take` 方法中分配。
  *
- * \param[in] type_support 要预先分配的消息的类型支持。 (Type support of the message to be
- * preallocated.) \param[in] message_bounds 要预先分配的消息的边界结构。 (Bounds structure of the
- * message to be preallocated.) \param[out] allocation 要传递给 `rmw_take` 的分配结构。 (Allocation
- * structure to be passed to `rmw_take`.) \return 如果成功，则返回 `RMW_RET_OK`，或者 (if
- * successful, or) \return 如果未实现，则返回 `RMW_RET_UNSUPPORTED` (if it's unimplemented) \return
- * 如果参数为空，则返回 `RMW_RET_INVALID_ARGUMENT`，或者 (if an argument is null, or) \return
- * 如果发生意外错误，则返回 `RMW_RET_ERROR`。 (if an unexpected error occurs.)
+ * \param[in] type_support 要预先分配的消息的类型支持。
+ * \param[in] message_bounds 要预先分配的消息的边界结构。
+ * \param[out] allocation 要传递给 `rmw_take` 的分配结构。
+ * \return 如果成功，则返回 `RMW_RET_OK`，或者
+ * \return 如果未实现，则返回 `RMW_RET_UNSUPPORTED` (if it's unimplemented)
+ * \return 如果参数为空，则返回 `RMW_RET_INVALID_ARGUMENT`，或者 (if an argument is null, or)
+ * \return 如果发生意外错误，则返回 `RMW_RET_ERROR`。 (if an unexpected error occurs.)
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
@@ -1312,18 +1239,11 @@ rmw_subscription_t* rmw_create_subscription(
  * <i>[1] rmw implementation defined, check the implementation documentation</i>
  *
  * \param[in] node 注册给定订阅的节点句柄
- * \param[in] node Handle to node with which the given subscription is registered
  * \param[in] subscription 要完成的订阅句柄
- * \param[in] subscription Handle to subscription to be finalized
  * \return 成功时返回 `RMW_RET_OK`，或者
- * \return `RMW_RET_OK` if successful, or
  * \return 如果节点或订阅为 `NULL`，则返回 `RMW_RET_INVALID_ARGUMENT`，或者
- * \return `RMW_RET_INVALID_ARGUMENT` if node or subscription is `NULL`, or
  * \return 如果节点或订阅实现标识符不匹配，则返回 `RMW_RET_INCORRECT_RMW_IMPLEMENTATION`，或者
- * \return `RMW_RET_INCORRECT_RMW_IMPLEMENTATION` if node or subscription
- *   implementation identifier does not match, or
  * \return 如果发生意外错误，则返回 `RMW_RET_ERROR`。
- * \return `RMW_RET_ERROR` if an unexpected error occurs.
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
@@ -1332,8 +1252,6 @@ rmw_ret_t rmw_destroy_subscription(rmw_node_t* node, rmw_subscription_t* subscri
 /// 检索与订阅匹配的发布者数量。 (Retrieve the number of matched publishers to a subscription.)
 /**
  * 查询底层中间件以确定有多少发布者与给定订阅匹配。
- * (Query the underlying middleware to determine how many publishers are
- * matched to a given subscription.)
  *
  * <hr>
  * Attribute          | Adherence

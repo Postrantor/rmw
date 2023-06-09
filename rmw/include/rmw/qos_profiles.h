@@ -69,11 +69,7 @@ static const rmw_qos_profile_t rmw_qos_profile_parameters = {
     RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
     false};
 
-/**
- * @brief 默认的 rmw_qos_profile_t 结构体配置，用于设置 ROS2 通信的 QoS (Quality of Service) 参数。
- *        Default rmw_qos_profile_t configuration, used to set QoS (Quality of Service) parameters
- * for ROS2 communication.
- */
+/// 默认的 rmw_qos_profile_t 结构体配置，用于设置 ROS2 通信的 QoS (Quality of Service) 参数。
 static const rmw_qos_profile_t rmw_qos_profile_default = {
     RMW_QOS_POLICY_HISTORY_KEEP_LAST,
     10,
@@ -85,11 +81,7 @@ static const rmw_qos_profile_t rmw_qos_profile_default = {
     RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
     false};
 
-/**
- * @brief 默认的服务 QoS 配置，用于设置 ROS2 服务通信的 QoS 参数。
- *        Default service QoS configuration, used to set QoS parameters for ROS2 service
- * communication.
- */
+/// 默认的服务 QoS 配置，用于设置 ROS2 服务通信的 QoS 参数。
 static const rmw_qos_profile_t rmw_qos_profile_services_default = {
     RMW_QOS_POLICY_HISTORY_KEEP_LAST,
     10,
@@ -101,11 +93,7 @@ static const rmw_qos_profile_t rmw_qos_profile_services_default = {
     RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
     false};
 
-/**
- * @brief 参数事件 QoS 配置，用于设置 ROS2 参数事件通信的 QoS 参数。
- *        Parameter events QoS configuration, used to set QoS parameters for ROS2 parameter events
- * communication.
- */
+/// 参数事件 QoS 配置，用于设置 ROS2 参数事件通信的 QoS 参数。
 static const rmw_qos_profile_t rmw_qos_profile_parameter_events = {
     RMW_QOS_POLICY_HISTORY_KEEP_LAST,
     1000,
@@ -129,20 +117,13 @@ static const rmw_qos_profile_t rmw_qos_profile_system_default = {
     false};
 
 /// 与当前大多数可用端点匹配，同时保持最高服务水平
-/// Match majority of endpoints currently available while maintaining the highest level of service
 /**
  * 在创建订阅或发布器时选择可靠性、持久性、截止日期、活跃度和活跃度租期策略。
- * Reliability, durability, deadline, liveliness, and liveliness lease duration policies will be
- * chosen at the time of creating a subscription or publisher.
  *
  * 创建端点后，可以使用 `rmw_get_subscriptions_info_by_topic` 或 `rmw_get_publishers_info_by_topic`
  * 获取实际的 QoS 策略。
- * The actual QoS policy can be retrieved after the endpoint is created with
- * `rmw_get_subscriptions_info_by_topic` or `rmw_get_publishers_info_by_topic`.
  *
  * 即使一个或多个策略与新发现的端点不兼容，中间件也不会在创建订阅或发布器后更新策略。
- * Therefore, this profile should be used with care since non-deterministic behavior
- * can occur due to races with discovery.
  */
 static const rmw_qos_profile_t rmw_qos_profile_best_available = {
     RMW_QOS_POLICY_HISTORY_KEEP_LAST,
@@ -166,15 +147,10 @@ static const rmw_qos_profile_t rmw_qos_profile_unknown = {
     RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
     false};
 
-/**
- * @brief 定义 QoS 兼容性类型枚举 (Define the QoS compatibility type enumeration)
- */
+/// 定义 QoS 兼容性类型枚举 (Define the QoS compatibility type enumeration)
 typedef enum RMW_PUBLIC_TYPE rmw_qos_compatibility_type_e {
-  /// QoS 策略兼容 (QoS policies are compatible)
   RMW_QOS_COMPATIBILITY_OK = 0,
-  /// QoS 策略可能不兼容 (QoS policies may not be compatible)
   RMW_QOS_COMPATIBILITY_WARNING,
-  /// QoS 策略不兼容 (QoS policies are not compatible)
   RMW_QOS_COMPATIBILITY_ERROR
 } rmw_qos_compatibility_type_t;
 
@@ -182,15 +158,10 @@ typedef enum RMW_PUBLIC_TYPE rmw_qos_compatibility_type_e {
  * @brief 检查两个 QoS 配置文件是否兼容 (Check if two QoS profiles are compatible)
  *
  * 如果使用 QoS 策略的发布者和订阅者可以相互通信，则两个 QoS 配置文件是兼容的。
- * (Two QoS profiles are compatible if a publisher and subscription using the QoS policies can
- * communicate with each other)
  *
  * 如果任何配置文件策略的值为 "system default" 或 "unknown"，则可能无法确定兼容性。
  * 在这种情况下，输出参数 `compatibility` 被设置为 `RMW_QOS_COMPATIBILITY_WARNING`，并填充
  * `reason`。
- * (If any of the profile policies has the value "system default" or "unknown", then it may
- * not be possible to determine the compatibilty. In this case, the output parameter `compatibility`
- * is set to `RMW_QOS_COMPATIBILITY_WARNING` and `reason` is populated)
  *
  * 如果出现兼容性警告或错误，并为 `reason`
  * 提供缓冲区，则所有警告和错误的解释将填充到缓冲区中，用分号 (`;`) 分隔。
@@ -198,13 +169,6 @@ typedef enum RMW_PUBLIC_TYPE rmw_qos_compatibility_type_e {
  * 如果提供的缓冲区不够大，此函数仍会向缓冲区写入，最多达到 `reason_size` 个字符。
  * 因此，如果达到缓冲区大小限制，则可能无法传达所有错误和警告。
  * 缓冲区大小为 2048 应该足以捕获所有可能的错误和警告。
- * (If there is a compatibility warning or error, and a buffer is provided for `reason`, then an
- * explanation of all warnings and errors will be populated into the buffer, separated by
- * semi-colons (`;`). Errors will appear before warnings in the string buffer. If the provided
- * buffer is not large enough, this function will still write to the buffer, up to the `reason_size`
- * number of characters. Therefore, it is possible that not all errors and warnings are communicated
- * if the buffer size limit is reached. A buffer size of 2048 should be more than enough to capture
- * all possible errors and warnings)
  *
  * @param[in] publisher_profile 发布者使用的 QoS 配置文件 (The QoS profile used for a publisher)
  * @param[in] subscription_profile 订阅者使用的 QoS 配置文件 (The QoS profile used for a

@@ -109,9 +109,8 @@ rmw_ret_t rmw_names_and_types_check_zero(rmw_names_and_types_t* names_and_types)
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_names_and_types_init(rmw_names_and_types_t* names_and_types,
-                                   size_t size,
-                                   rcutils_allocator_t* allocator);
+rmw_ret_t rmw_names_and_types_init(
+    rmw_names_and_types_t* names_and_types, size_t size, rcutils_allocator_t* allocator);
 
 /// 结束名称和类型数组 (Finalize an array of names and types)
 /**

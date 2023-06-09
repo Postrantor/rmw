@@ -124,8 +124,8 @@ rmw_topic_endpoint_info_t rmw_get_zero_initialized_topic_endpoint_info(void);
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_fini(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                       rcutils_allocator_t* allocator);
+rmw_ret_t rmw_topic_endpoint_info_fini(
+    rmw_topic_endpoint_info_t* topic_endpoint_info, rcutils_allocator_t* allocator);
 
 /// 设置给定主题端点信息数据结构中的主题类型。 (Set the topic type in the given topic endpoint info
 /// data structure.)
@@ -172,9 +172,10 @@ rmw_ret_t rmw_topic_endpoint_info_fini(rmw_topic_endpoint_info_t* topic_endpoint
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_set_topic_type(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                                 const char* topic_type,
-                                                 rcutils_allocator_t* allocator);
+rmw_ret_t rmw_topic_endpoint_info_set_topic_type(
+    rmw_topic_endpoint_info_t* topic_endpoint_info,
+    const char* topic_type,
+    rcutils_allocator_t* allocator);
 
 /// 设置给定主题端点信息数据结构中的主题类型哈希。
 /// Set the topic type hash in the given topic endpoint info data structure.
@@ -273,9 +274,10 @@ rmw_ret_t rmw_topic_endpoint_info_set_topic_type_hash(
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_set_node_name(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                                const char* node_name,
-                                                rcutils_allocator_t* allocator);
+rmw_ret_t rmw_topic_endpoint_info_set_node_name(
+    rmw_topic_endpoint_info_t* topic_endpoint_info,
+    const char* node_name,
+    rcutils_allocator_t* allocator);
 
 /// 设置给定主题端点信息数据结构中的节点命名空间。
 /// Set the node namespace in the given topic endpoint info data structure.
@@ -334,9 +336,10 @@ rmw_ret_t rmw_topic_endpoint_info_set_node_name(rmw_topic_endpoint_info_t* topic
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                                     const char* node_namespace,
-                                                     rcutils_allocator_t* allocator);
+rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(
+    rmw_topic_endpoint_info_t* topic_endpoint_info,
+    const char* node_namespace,
+    rcutils_allocator_t* allocator);
 
 /// 设置给定主题端点信息数据结构中的端点类型。 (Set the endpoint type in the given topic endpoint
 /// info data structure.)
@@ -368,8 +371,8 @@ rmw_ret_t rmw_topic_endpoint_info_set_node_namespace(rmw_topic_endpoint_info_t* 
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_set_endpoint_type(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                                    rmw_endpoint_type_t type);
+rmw_ret_t rmw_topic_endpoint_info_set_endpoint_type(
+    rmw_topic_endpoint_info_t* topic_endpoint_info, rmw_endpoint_type_t type);
 
 /// 设置给定主题端点信息数据结构中的端点 gid。 (Set the endpoint gid in the given topic endpoint
 /// info data structure.)
@@ -404,9 +407,8 @@ rmw_ret_t rmw_topic_endpoint_info_set_endpoint_type(rmw_topic_endpoint_info_t* t
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_set_gid(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                          const uint8_t* gid,
-                                          size_t size);
+rmw_ret_t rmw_topic_endpoint_info_set_gid(
+    rmw_topic_endpoint_info_t* topic_endpoint_info, const uint8_t* gid, size_t size);
 
 /// 设置给定主题端点信息数据结构中的端点 QoS 配置文件。 (Set the endpoint QoS profile in the given
 /// topic endpoint info data structure.)
@@ -440,8 +442,8 @@ rmw_ret_t rmw_topic_endpoint_info_set_gid(rmw_topic_endpoint_info_t* topic_endpo
  */
 RMW_PUBLIC
 RMW_WARN_UNUSED
-rmw_ret_t rmw_topic_endpoint_info_set_qos_profile(rmw_topic_endpoint_info_t* topic_endpoint_info,
-                                                  const rmw_qos_profile_t* qos_profile);
+rmw_ret_t rmw_topic_endpoint_info_set_qos_profile(
+    rmw_topic_endpoint_info_t* topic_endpoint_info, const rmw_qos_profile_t* qos_profile);
 
 #ifdef __cplusplus
 }

@@ -99,13 +99,17 @@ extern "C" {
  * \param[in] no_demangle Whether to demangle all topic names following ROS conventions or not.
  * \param[out] topic_names_and_types 远程节点为其创建订阅的主题名称和类型数组，
  *   成功时填充，但失败时保持不变。如果填充了该数组，则调用者需要稍后使用 rmw_names_and_types_fini()
- * 对其进行最终处理。 \param[out] topic_names_and_types Array of topic names and types the remote
+ * 对其进行最终处理。 
+ * \param[out] topic_names_and_types Array of topic names and types the remote
  * node has created a subscription for, populated on success but left unchanged on failure. If
  * populated, it is up to the caller to finalize this array later on using
- * rmw_names_and_types_fini(). \return `RMW_RET_OK` 如果查询成功，或 \return `RMW_RET_OK` if the
- * query was successful, or \return `RMW_RET_INVALID_ARGUMENT` 如果 `node` 为 NULL，或 \return
- * `RMW_RET_INVALID_ARGUMENT` if `node` is NULL, or \return `RMW_RET_INVALID_ARGUMENT` 如果
- * `allocator` \return `RMW_RET_INVALID_ARGUMENT` if `allocator` is not valid, by
+ * rmw_names_and_types_fini(). 
+ * \return `RMW_RET_OK` 如果查询成功，或 
+ * \return `RMW_RET_OK` if the query was successful, or 
+ * \return `RMW_RET_INVALID_ARGUMENT` 如果 `node` 为 NULL，或 
+ * \return `RMW_RET_INVALID_ARGUMENT` if `node` is NULL, or 
+ * \return `RMW_RET_INVALID_ARGUMENT` 如果 `allocator` 
+ * \return `RMW_RET_INVALID_ARGUMENT` if `allocator` is not valid, by
  * rcutils_allocator_is_valid() definition, or \return `RMW_RET_INVALID_ARGUMENT` if `node_name` is
  * not valid, by rmw_validate_node_name() definition, or \return `RMW_RET_INVALID_ARGUMENT` if
  * `node_namespace` is not valid, by rmw_validate_namespace() definition, or \return
